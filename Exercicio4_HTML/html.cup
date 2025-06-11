@@ -1,0 +1,13 @@
+import java_cup.runtime.*;
+parser code {: 
+  public static void main(String[] args) throws Exception {
+    Parser p = new Parser(new Lexer(new java.io.FileReader("entrada.html")));
+    p.parse();
+  }
+:};
+terminal A_OPEN, HREF, TAG_CLOSE, TEXT, A_CLOSE, IMG_OPEN, SRC, TAG_SELFCLOSE;
+non terminal html, tag;
+start with html;
+html ::= html tag | tag;
+tag ::= A_OPEN HREF TAG_CLOSE TEXT A_CLOSE {: System.out.println("Link para: " + $2 + " com texto: '" + $4 + "'"); :}
+     | IMG_OPEN SRC TAG_SELFCLOSE {: System.out.println("Imagem: " + $2); :};

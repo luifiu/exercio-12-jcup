@@ -1,0 +1,15 @@
+import java_cup.runtime.*;
+parser code {: 
+  public static void main(String[] args) throws Exception {
+    Parser p = new Parser(new Lexer(new java.io.FileReader("entrada.txt")));
+    p.parse();
+  }
+:};
+terminal DO, LBRA, RBRA, ASSIGN, LT, INC, OUT, LPAREN, RPAREN, PV;
+terminal Integer NUM;
+terminal String ID;
+non terminal program, stmt;
+start with program;
+program ::= stmt;
+stmt ::= DO LBRA ID ASSIGN NUM PV ID LT NUM PV ID INC RBRA OUT LPAREN ID RPAREN
+       {: System.out.println("for(" + $3 + " = " + $5 + "; " + $7 + " < " + $9 + "; " + $11 + "++) {"); System.out.println("  System.out.println(" + $15 + ");"); System.out.println("}"); :};

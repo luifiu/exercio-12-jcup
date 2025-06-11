@@ -1,0 +1,30 @@
+import java_cup.runtime.*;
+
+parser code {: 
+  public static void main(String[] args) throws Exception {
+    Parser p = new Parser(new Lexer(new java.io.FileReader("entrada.txt")));
+    System.out.println("Resultado = " + p.parse().value);
+  }
+:};
+
+terminal PLUS, MINUS, TIMES, DIV, MOD, POW, LPAREN, RPAREN;
+terminal Integer NUM;
+
+non terminal Integer expr;
+
+precedence left PLUS, MINUS;
+precedence left TIMES, DIV, MOD;
+precedence right POW;
+precedence right UMINUS;
+
+start with expr;
+
+expr ::= expr PLUS expr      {: RESULT = $1 + $3; :}
+       | expr MINUS expr     {: RESULT = $1 - $3; :}
+       | expr TIMES expr     {: RESULT = $1 * $3; :}
+       | expr DIV expr       {: RESULT = $1 / $3; :}
+       | expr MOD expr       {: RESULT = $1 % $3; :}
+       | expr POW expr       {: RESULT = (int)Math.pow($1, $3); :}
+       | MINUS expr %prec UMINUS {: RESULT = -$2; :}
+       | LPAREN expr RPAREN  {: RESULT = $2; :}
+       | NUM                 {: RESULT = $1; :};
